@@ -11,5 +11,6 @@ public class ApplicationDbContext : IdentityDbContext
     {
     }
 
-	public DbSet<TicketSystem> Tickets { get; set; }
+    public DbSet<TicketSystem> Tickets { get; set; } 
+
 }
