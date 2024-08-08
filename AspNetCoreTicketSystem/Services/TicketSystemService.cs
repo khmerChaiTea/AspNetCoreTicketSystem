@@ -28,7 +28,7 @@ namespace AspNetCoreTicketSystem.Services
         public async Task<TicketSystem[]> GetAllTicketsAsync()
         {
             return await _context.Tickets
-                                 .OrderBy(t => t.CreatedAt)
+                                 .OrderByDescending(t => t.CreatedAt)
                                  .ToArrayAsync();
         }
 
