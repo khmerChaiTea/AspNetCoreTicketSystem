@@ -2,7 +2,85 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - My ASP.NET Application</title>
+    <style>
+        /* General styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            animation: color-change 10000ms ease-in-out infinite; /*Makes the color changing effect*/
+        }
+        /* Had to add another at symbol so that keyframes wouldn't be underlined red anymore*/
+        @@keyframes color-change {
+            0% {
+                background-color: teal;
+            }
+            20% {
+                background-color: gold;
+            }
+            40% {
+                background-color: indianred;
+            }
+            60% {
+                background-color: violet;
+            }
+            80% {
+                background-color: green;
+            }
+            100% {
+                background-color: teal;
+            }
+        }
+
+
+        /* Header styles */
+        header {
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            color: black; /* Primary color */
+        }
+
+        header p {
+            font-size: 1.2em;
+            color: #efefef;
+        }
+
+        /* Main content styles */
+        main {
+            margin: 20px 0;
+            padding: 20px;
+            background-color: white; /* Light blue background */
+            border-radius: 8px;
+            box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05);
+        }
+
+        main p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Welcome to the Ticket System</h1>
+            <p>Your one-stop solution for all support needs</p>
+        </header>
+        <main>
+            <p>Need assistance with your issues? Our team is here to provide you with the support you need.</p>
+            <p>Explore our knowledge base for personalized help.</p>
+        </main>
+    </div>
+</body>
+</html>
