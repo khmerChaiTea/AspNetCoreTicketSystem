@@ -5,22 +5,30 @@ using AspNetCoreTicketSystem.Services;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace AspNetCoreTicketSystem.Controllers
 {
+    [Authorize]
     public class TicketsController : Controller
     {
         private readonly ITicketSystemService _ticketService;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public TicketsController(ITicketSystemService ticketService)
+        public TicketsController(ITicketSystemService ticketService, UserManager<IdentityUser> userManager)
         {
             _ticketService = ticketService;
+            _userManager = userManager;
         }
 
         // GET: Tickets
         public async Task<IActionResult> Index()
         {
-            var tickets = await _ticketService.GetActiveTicketsAsync();
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null) return Challenge();
+
+            var tickets = await _ticketService.GetActiveTicketsAsync(currentUser);
             return View(tickets);
         }
 
@@ -61,11 +69,17 @@ namespace AspNetCoreTicketSystem.Controllers
         {
             if (ModelState.IsValid)
             {
+                var currentUser = await _userManager.GetUserAsync(User);
+                if (currentUser == null) return Challenge();
+
                 ticket.CreatedAt = DateTime.UtcNow;
                 ticket.UpdatedAt = DateTime.UtcNow;
+                ticket.UserId = currentUser.Id; // Set the UserId
+
                 await _ticketService.CreateTicketAsync(ticket);
                 return RedirectToAction(nameof(Index));
             }
+
             return View(ticket);
         }
 
@@ -99,7 +113,12 @@ namespace AspNetCoreTicketSystem.Controllers
             {
                 try
                 {
+                    var currentUser = await _userManager.GetUserAsync(User);
+                    if (currentUser == null) return Challenge();
+
                     ticket.UpdatedAt = DateTime.UtcNow;
+                    ticket.UserId = currentUser.Id; // Ensure UserId is set
+
                     await _ticketService.UpdateTicketAsync(ticket);
                 }
                 catch (DbUpdateConcurrencyException)
@@ -115,6 +134,7 @@ namespace AspNetCoreTicketSystem.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
             return View(ticket);
         }
 

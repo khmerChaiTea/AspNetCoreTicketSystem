@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AspNetCoreTicketSystem.Data;
 using AspNetCoreTicketSystem.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace AspNetCoreTicketSystem.Services
@@ -17,10 +18,10 @@ namespace AspNetCoreTicketSystem.Services
             _context = context;
         }
 
-        public async Task<TicketSystem[]> GetActiveTicketsAsync()
+        public async Task<TicketSystem[]> GetActiveTicketsAsync(IdentityUser user)
         {
             return await _context.Tickets
-                                 .Where(t => !t.IsDeleted)
+                                 .Where(t => !t.IsDeleted && t.UserId == user.Id)
                                  .ToArrayAsync();
         }
 

@@ -3,6 +3,7 @@ using AspNetCoreTicketSystem.Data;
 using AspNetCoreTicketSystem.Models;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AspNetCoreTicketSystem.Controllers
 {

@@ -11,5 +11,6 @@
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public bool IsDeleted { get; set; } = false; // New property
+        public string UserId { get; set; } = string.Empty;
     }
 }
