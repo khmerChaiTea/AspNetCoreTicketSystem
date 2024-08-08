@@ -1,11 +1,6 @@
 ﻿@model IEnumerable<AspNetCoreTicketSystem.Models.TicketSystem>
 
-<h2>Active Tickets</h2>
-
-<p>
-    <a asp-action="Create" class="btn btn-primary">Create New Ticket</a>
-    <a asp-action="History" class="btn btn-secondary">View Ticket History</a>
-</p>
+<h2>Ticket History</h2>
 
 <table class="table">
     <thead>
@@ -14,7 +9,7 @@
             <th>Status</th>
             <th>Created At</th>
             <th>Updated At</th>
-            <th>Actions</th>
+            <th>Deleted</th>
         </tr>
     </thead>
     <tbody>
@@ -25,10 +20,7 @@
                     <td>@ticket.Status</td>
                     <td>@ticket.CreatedAt.ToString("g")</td>
                     <td>@ticket.UpdatedAt.ToString("g")</td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@ticket.Id" class="btn btn-warning">Edit</a>
-                        <a asp-action="Delete" asp-route-id="@ticket.Id" class="btn btn-danger">Delete</a>
-                    </td>
+                    <td>@(ticket.IsDeleted ? "Yes" : "No")</td>
                 </tr>
         }
     </tbody>

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,20 +17,28 @@ namespace AspNetCoreTicketSystem.Services
             _context = context;
         }
 
+        public async Task<TicketSystem[]> GetActiveTicketsAsync()
+        {
+            return await _context.Tickets
+                                 .Where(t => !t.IsDeleted)
+                                 .ToArrayAsync();
+        }
+
         public async Task<TicketSystem[]> GetAllTicketsAsync()
         {
-            return await _context.Tickets.ToArrayAsync();
+            return await _context.Tickets
+                                 .OrderBy(t => t.CreatedAt)
+                                 .ToArrayAsync();
         }
 
         public async Task<TicketSystem> GetTicketByIdAsync(int id)
         {
-            var ticket = await _context.Tickets.FindAsync(id);
+            var ticket = await _context.Tickets
+                                       .FirstOrDefaultAsync(t => t.Id == id && !t.IsDeleted);
+
             if (ticket == null)
             {
-                // Handle the null case appropriately
                 throw new InvalidOperationException("Ticket not found");
-                // Or provide a default instance
-                // return new TicketSystem();
             }
 
             return ticket;
@@ -37,12 +46,15 @@ namespace AspNetCoreTicketSystem.Services
 
         public async Task CreateTicketAsync(TicketSystem ticket)
         {
+            ticket.CreatedAt = DateTime.UtcNow;
+            ticket.UpdatedAt = DateTime.UtcNow;
             _context.Tickets.Add(ticket);
             await _context.SaveChangesAsync();
         }
 
         public async Task UpdateTicketAsync(TicketSystem ticket)
         {
+            ticket.UpdatedAt = DateTime.UtcNow;
             _context.Tickets.Update(ticket);
             await _context.SaveChangesAsync();
         }
@@ -52,7 +64,9 @@ namespace AspNetCoreTicketSystem.Services
             var ticket = await _context.Tickets.FindAsync(id);
             if (ticket != null)
             {
-                _context.Tickets.Remove(ticket);
+                ticket.IsDeleted = true;
+                ticket.UpdatedAt = DateTime.UtcNow;
+                _context.Tickets.Update(ticket);
                 await _context.SaveChangesAsync();
             }
         }

@@ -20,6 +20,13 @@ namespace AspNetCoreTicketSystem.Controllers
         // GET: Tickets
         public async Task<IActionResult> Index()
         {
+            var tickets = await _ticketService.GetActiveTicketsAsync();
+            return View(tickets);
+        }
+
+        // GET: Tickets/History
+        public async Task<IActionResult> History()
+        {
             var tickets = await _ticketService.GetAllTicketsAsync();
             return View(tickets);
         }

@@ -1,0 +1,29 @@
+﻿@model IEnumerable<AspNetCoreTicketSystem.Models.TicketSystem>
+
+@{
+    ViewData["Title"] = "Ticket History";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Status</th>
+            <th>Created At</th>
+            <th>Updated At</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var ticket in Model)
+        {
+                <tr>
+                    <td>@ticket.Title</td>
+                    <td>@ticket.Status</td>
+                    <td>@ticket.CreatedAt</td>
+                    <td>@ticket.UpdatedAt</td>
+                </tr>
+        }
+    </tbody>
+</table>
