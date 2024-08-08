@@ -1,9 +1,7 @@
-
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AspNetCoreTicketSystem.Data;
-using AspNetCoreTicketSystem;
 using AspNetCoreTicketSystem.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,7 +16,6 @@ namespace AspNetCoreTicketSystem.Services
             _context = context;
         }
 
-
         public async Task<TicketSystem[]> GetAllTicketsAsync()
         {
             return await _context.Tickets.ToArrayAsync();
@@ -27,7 +24,15 @@ namespace AspNetCoreTicketSystem.Services
         public async Task<TicketSystem> GetTicketByIdAsync(int id)
         {
             var ticket = await _context.Tickets.FindAsync(id);
-            return ticket ?? new TicketSystem(); 
+            if (ticket == null)
+            {
+                // Handle the null case appropriately
+                throw new InvalidOperationException("Ticket not found");
+                // Or provide a default instance
+                // return new TicketSystem();
+            }
+
+            return ticket;
         }
 
         public async Task CreateTicketAsync(TicketSystem ticket)

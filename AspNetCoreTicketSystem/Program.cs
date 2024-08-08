@@ -15,7 +15,10 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
+
+// In ConfigureServices method or equivalent
 builder.Services.AddScoped<ITicketSystemService, TicketSystemService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
