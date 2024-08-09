@@ -1,17 +1,19 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace AspNetCoreTicketSystem.Models
+public class ManageUsersViewModel
 {
-    internal class ManageUsersViewModel
+    public ManageUsersViewModel()
     {
-        // Help Items stop complaining about null p. 87
-        public ManageUsersViewModel()
-        {
-            Administrators = Array.Empty<IdentityUser>();
-            Everyone = Array.Empty<IdentityUser>();
-        }
-
-        public IdentityUser[] Administrators { get; set; }
-        public IdentityUser[] Everyone { get; set; }
+        Administrators = Array.Empty<IdentityUser>();
+        HelpdeskUsers = Array.Empty<IdentityUser>();
+        Everyone = Array.Empty<IdentityUser>();
+        Roles = Array.Empty<IdentityRole>();
+        UserRoles = new Dictionary<string, IEnumerable<string>>(); // Add this line
     }
+
+    public IEnumerable<IdentityUser> Administrators { get; set; }
+    public IEnumerable<IdentityUser> HelpdeskUsers { get; set; }
+    public IEnumerable<IdentityUser> Everyone { get; set; }
+    public IEnumerable<IdentityRole> Roles { get; set; }
+    public IDictionary<string, IEnumerable<string>> UserRoles { get; set; } // Add this line
 }
