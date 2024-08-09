@@ -28,6 +28,13 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+                        @* Conditionally display the Helpdesk Users link *@
+                        @if (User.IsInRole(Constants.HelpdeskRole))
+                        {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-controller="HelpdeskUsers" asp-action="Index">Helpdesk Users</a>
+                                </li>
+                        }
                     </ul>
                     <partial name="_LoginPartial" />
                     <partial name="_AdminActionsPartial" />

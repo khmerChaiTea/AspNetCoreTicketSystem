@@ -16,14 +16,23 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var ticket in Model)
+        @if (!Model.Any())
         {
                 <tr>
-                    <td>@ticket.Title</td>
-                    <td>@ticket.Status</td>
-                    <td>@ticket.CreatedAt</td>
-                    <td>@ticket.UpdatedAt</td>
+                    <td colspan="4">No tickets available.</td>
                 </tr>
+        }
+        else
+        {
+            @foreach (var ticket in Model)
+            {
+                        <tr>
+                            <td>@ticket.Title</td>
+                            <td>@ticket.Status</td>
+                            <td>@ticket.CreatedAt.ToString("g")</td>
+                            <td>@ticket.UpdatedAt.ToString("g")</td>
+                        </tr>
+            }
         }
     </tbody>
 </table>

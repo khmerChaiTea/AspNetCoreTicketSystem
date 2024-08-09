@@ -1,0 +1,38 @@
+﻿@model AspNetCoreTicketSystem.Models.HelpdeskUsersViewModel
+
+@{
+    ViewData["Title"] = "Helpdesk Users";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Email</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.HelpdeskUsers.Any())
+        {
+                <tr>
+                    <td colspan="2">No helpdesk users available.</td>
+                </tr>
+        }
+        else
+        {
+            @foreach (var user in Model.HelpdeskUsers)
+            {
+                        <tr>
+                            <td>@user.Id</td>
+                            <td>@user.Email</td>
+                        </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<div>
+    <a class="btn btn-primary" asp-controller="Tickets" asp-action="History">View Ticket History</a>
+</div>
