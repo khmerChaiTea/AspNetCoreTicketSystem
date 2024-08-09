@@ -65,7 +65,7 @@ namespace AspNetCoreTicketSystem.Controllers
         // POST: Tickets/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,Status")] TicketSystem ticket)
+        public async Task<IActionResult> Create([Bind("Title,Description")] TicketSystem ticket)
         {
             if (ModelState.IsValid)
             {
@@ -74,7 +74,8 @@ namespace AspNetCoreTicketSystem.Controllers
 
                 ticket.CreatedAt = DateTime.UtcNow;
                 ticket.UpdatedAt = DateTime.UtcNow;
-                ticket.UserId = currentUser.Id; // Set the UserId
+                ticket.Status = "Created"; // Set default status
+                ticket.UserId = currentUser.Id;
 
                 await _ticketService.CreateTicketAsync(ticket);
                 return RedirectToAction(nameof(Index));
@@ -99,7 +100,6 @@ namespace AspNetCoreTicketSystem.Controllers
             return View(ticket);
         }
 
-        // POST: Tickets/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Status")] TicketSystem ticket)
@@ -109,17 +109,36 @@ namespace AspNetCoreTicketSystem.Controllers
                 return NotFound();
             }
 
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null) return Challenge();
+
+            // Check if the user is in the HelpdeskRole
+            var isHelpdesk = User.IsInRole(Constants.HelpdeskRole);
+
+            if (!isHelpdesk)
+            {
+                // Prevent unauthorized status changes
+                ticket.Status = (await _ticketService.GetTicketByIdAsync(id)).Status;
+            }
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var currentUser = await _userManager.GetUserAsync(User);
-                    if (currentUser == null) return Challenge();
+                    var existingTicket = await _ticketService.GetTicketByIdAsync(id);
+                    if (existingTicket == null)
+                    {
+                        return NotFound();
+                    }
 
-                    ticket.UpdatedAt = DateTime.UtcNow;
-                    ticket.UserId = currentUser.Id; // Ensure UserId is set
+                    // Update only Title and Description, and Status if authorized
+                    existingTicket.Title = ticket.Title;
+                    existingTicket.Description = ticket.Description;
+                    if (isHelpdesk) existingTicket.Status = ticket.Status;
+                    existingTicket.UpdatedAt = DateTime.UtcNow;
+                    existingTicket.UserId = currentUser.Id;
 
-                    await _ticketService.UpdateTicketAsync(ticket);
+                    await _ticketService.UpdateTicketAsync(existingTicket);
                 }
                 catch (DbUpdateConcurrencyException)
                 {

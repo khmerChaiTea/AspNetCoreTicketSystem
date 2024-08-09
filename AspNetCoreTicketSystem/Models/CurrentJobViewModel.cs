@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 
 namespace AspNetCoreTicketSystem.Models
 {
     public class CurrentJobViewModel
     {
-        public int Id { get; set; }  // Add this line
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Status { get; set; }
         public string Description { get; set; }
@@ -14,9 +15,15 @@ namespace AspNetCoreTicketSystem.Models
         // Constructor to initialize properties
         public CurrentJobViewModel()
         {
-            Name = string.Empty; // Initialize with a default value
+            Name = string.Empty;
             Status = string.Empty;
             Description = string.Empty;
+            StatusOptions = new SelectList(new[] {
+                "Pending",
+                "Need More Info",
+                "Waiting on Parts",
+                "Complete"
+            });
         }
 
         // Calculate the number of days since creation
@@ -29,12 +36,14 @@ namespace AspNetCoreTicketSystem.Models
             {
                 if (Status == "Done" && CompletedAt.HasValue)
                 {
-                    // Calculate the time to complete in whole days
                     int daysToComplete = (int)Math.Round((CompletedAt.Value - CreatedAt).TotalDays);
                     return $"{daysToComplete} days";
                 }
                 return "Ongoing";
             }
         }
+
+        // Add this property
+        public SelectList StatusOptions { get; set; }
     }
 }

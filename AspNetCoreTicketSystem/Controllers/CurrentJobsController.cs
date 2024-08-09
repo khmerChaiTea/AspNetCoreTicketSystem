@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using AspNetCoreTicketSystem.Models;
 using AspNetCoreTicketSystem.Data;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +25,7 @@ public class CurrentJobsController : Controller
             .Where(ticket => !ticket.IsDeleted) // Exclude deleted tickets
             .Select(ticket => new CurrentJobViewModel
             {
+                Id = ticket.Id, // Ensure Id is included in ViewModel
                 Name = ticket.Title,
                 Status = ticket.Status,
                 Description = ticket.Description,
@@ -39,7 +41,7 @@ public class CurrentJobsController : Controller
     public async Task<IActionResult> Edit(int id)
     {
         var ticket = await _context.Tickets
-            .FirstOrDefaultAsync(t => t.Id == id && !t.IsDeleted); // Check for deletion
+            .FirstOrDefaultAsync(t => t.Id == id && !t.IsDeleted);
 
         if (ticket == null)
         {
@@ -48,11 +50,19 @@ public class CurrentJobsController : Controller
 
         var viewModel = new CurrentJobViewModel
         {
+            Id = ticket.Id,
             Name = ticket.Title,
             Status = ticket.Status,
             Description = ticket.Description,
             CreatedAt = ticket.CreatedAt,
-            CompletedAt = ticket.CompletedAt
+            CompletedAt = ticket.CompletedAt,
+            StatusOptions = new SelectList(new[]
+            {
+            new { Value = "Pending", Text = "Pending" },
+            new { Value = "Need More Info", Text = "Need More Info" },
+            new { Value = "Waiting on Parts", Text = "Waiting on Parts" },
+            new { Value = "Complete", Text = "Complete" }
+        }, "Value", "Text", ticket.Status)
         };
 
         return View(viewModel);
@@ -81,8 +91,8 @@ public class CurrentJobsController : Controller
             // Update ticket properties
             ticket.Status = model.Status;
 
-            // Only set CompletedAt if status is "Done", otherwise set to null
-            ticket.CompletedAt = model.Status == "Done" ? DateTime.UtcNow : (DateTime?)null;
+            // Only set CompletedAt if status is "Complete", otherwise set to null
+            ticket.CompletedAt = model.Status == "Complete" ? DateTime.UtcNow : (DateTime?)null;
 
             try
             {
