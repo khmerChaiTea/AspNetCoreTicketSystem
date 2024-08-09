@@ -88,7 +88,7 @@ public class CurrentJobsController : Controller
                 new { Value = "Pending", Text = "Pending" },
                 new { Value = "Need More Info", Text = "Need More Info" },
                 new { Value = "Waiting on Parts", Text = "Waiting on Parts" },
-                new { Value = "Complete", Text = "Complete" }
+                new { Value = "Completed", Text = "Completed" }
             }, "Value", "Text", ticket.Status)
         };
 

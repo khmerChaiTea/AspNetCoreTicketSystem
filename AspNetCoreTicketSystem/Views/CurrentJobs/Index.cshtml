@@ -44,7 +44,7 @@
                 Days Since Creation
             </th>
             <th>
-                Time to Complete
+                Completion Status
             </th>
             @if (isHelpdesk)
             {
@@ -69,7 +69,7 @@
                             <td>@job.Description</td>
                             <td>@job.CreatedAt.ToString("g")</td>
                             <td>@job.DaysSinceCreation</td>
-                            <td>@job.TimeToComplete</td>
+                            <td>@job.CompletionStatus</td>
                     @if (isHelpdesk)
                     {
                                     <td>

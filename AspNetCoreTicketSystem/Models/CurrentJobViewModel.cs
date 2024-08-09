@@ -22,22 +22,21 @@ namespace AspNetCoreTicketSystem.Models
                 "Pending",
                 "Need More Info",
                 "Waiting on Parts",
-                "Complete"
+                "Completed"
             });
         }
 
         // Calculate the number of days since creation
         public int DaysSinceCreation => (DateTime.UtcNow - CreatedAt).Days;
 
-        // Calculate the time to complete, if completed
-        public string TimeToComplete
+        // Return "Completed" if the status is "Completed", otherwise return "Ongoing"
+        public string CompletionStatus
         {
             get
             {
-                if (Status == "Done" && CompletedAt.HasValue)
+                if (Status == "Completed")
                 {
-                    int daysToComplete = (int)Math.Round((CompletedAt.Value - CreatedAt).TotalDays);
-                    return $"{daysToComplete} days";
+                    return "Completed";
                 }
                 return "Ongoing";
             }
