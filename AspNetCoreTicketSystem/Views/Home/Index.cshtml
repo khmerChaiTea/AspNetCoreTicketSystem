@@ -8,66 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - My ASP.NET Application</title>
-    <style>
-        /* General styles */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            color: #333;
-            animation: color-change 10000ms ease-in-out infinite; /*Makes the color changing effect*/
-        }
-        /* Had to add another at symbol so that keyframes wouldn't be underlined red anymore*/
-        @@keyframes color-change {
-            0% {
-                background-color: teal;
-            }
-            20% {
-                background-color: gold;
-            }
-            40% {
-                background-color: indianred;
-            }
-            60% {
-                background-color: violet;
-            }
-            80% {
-                background-color: green;
-            }
-            100% {
-                background-color: teal;
-            }
-        }
-
-
-        /* Header styles */
-        header {
-            margin-bottom: 20px;
-        }
-
-        header h1 {
-            font-size: 2.5em;
-            color: black; /* Primary color */
-        }
-
-        header p {
-            font-size: 1.2em;
-            color: #efefef;
-        }
-
-        /* Main content styles */
-        main {
-            margin: 20px 0;
-            padding: 20px;
-            background-color: white; /* Light blue background */
-        }
-
-        main p {
-            font-size: 1.1em;
-            line-height: 1.6;
-            color: #333;
-        }
-    </style>
+    <link rel="stylesheet" href="~/css/styles.css" /> <!-- Link to your stylesheet -->
 </head>
 <body>
     <div class="container">
