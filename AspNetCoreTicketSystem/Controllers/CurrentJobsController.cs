@@ -8,7 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AspNetCoreTicketSystem; // Adjust this if your Constants class is in a different namespace
 
-[Authorize(Roles = Constants.HelpdeskRole)]
+[Authorize]
 public class CurrentJobsController : Controller
 {
     private readonly ApplicationDbContext _context;
@@ -19,20 +19,47 @@ public class CurrentJobsController : Controller
     }
 
     // GET: CurrentJobs
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(string sortBy, string sortOrder)
     {
-        var jobs = await _context.Tickets
-            .Where(ticket => !ticket.IsDeleted) // Exclude deleted tickets
+        // Fetch all non-deleted jobs
+        var jobsQuery = _context.Tickets
+            .Where(ticket => !ticket.IsDeleted)
             .Select(ticket => new CurrentJobViewModel
             {
-                Id = ticket.Id, // Ensure Id is included in ViewModel
+                Id = ticket.Id,
                 Name = ticket.Title,
                 Status = ticket.Status,
                 Description = ticket.Description,
                 CreatedAt = ticket.CreatedAt,
                 CompletedAt = ticket.CompletedAt
-            })
-            .ToListAsync();
+            });
+
+        // Apply sorting based on the column header clicked
+        switch (sortBy)
+        {
+            case "Name":
+                jobsQuery = sortOrder == "desc" ? jobsQuery.OrderByDescending(j => j.Name) : jobsQuery.OrderBy(j => j.Name);
+                break;
+            case "Status":
+                jobsQuery = sortOrder == "desc" ? jobsQuery.OrderByDescending(j => j.Status) : jobsQuery.OrderBy(j => j.Status);
+                break;
+            case "Description":
+                jobsQuery = sortOrder == "desc" ? jobsQuery.OrderByDescending(j => j.Description) : jobsQuery.OrderBy(j => j.Description);
+                break;
+            case "CreatedAt":
+                jobsQuery = sortOrder == "desc" ? jobsQuery.OrderByDescending(j => j.CreatedAt) : jobsQuery.OrderBy(j => j.CreatedAt);
+                break;
+            default:
+                jobsQuery = jobsQuery.OrderBy(j => j.Name);
+                break;
+        }
+
+        // Execute the query and convert to a list
+        var jobs = await jobsQuery.ToListAsync();
+
+        // Pass sortBy and sortOrder to the View for sorting links
+        ViewData["SortBy"] = sortBy;
+        ViewData["SortOrder"] = sortOrder;
 
         return View(jobs);
     }
@@ -58,11 +85,11 @@ public class CurrentJobsController : Controller
             CompletedAt = ticket.CompletedAt,
             StatusOptions = new SelectList(new[]
             {
-            new { Value = "Pending", Text = "Pending" },
-            new { Value = "Need More Info", Text = "Need More Info" },
-            new { Value = "Waiting on Parts", Text = "Waiting on Parts" },
-            new { Value = "Complete", Text = "Complete" }
-        }, "Value", "Text", ticket.Status)
+                new { Value = "Pending", Text = "Pending" },
+                new { Value = "Need More Info", Text = "Need More Info" },
+                new { Value = "Waiting on Parts", Text = "Waiting on Parts" },
+                new { Value = "Complete", Text = "Complete" }
+            }, "Value", "Text", ticket.Status)
         };
 
         return View(viewModel);
@@ -81,7 +108,7 @@ public class CurrentJobsController : Controller
         if (ModelState.IsValid)
         {
             var ticket = await _context.Tickets
-                .FirstOrDefaultAsync(t => t.Id == id && !t.IsDeleted); // Check for deletion
+                .FirstOrDefaultAsync(t => t.Id == id && !t.IsDeleted);
 
             if (ticket == null)
             {
@@ -119,6 +146,7 @@ public class CurrentJobsController : Controller
 
     private bool TicketExists(int id)
     {
-        return _context.Tickets.Any(e => e.Id == id && !e.IsDeleted); // Check for deletion
+        return _context.Tickets.Any(e => e.Id == id && !e.IsDeleted);
     }
 }
+

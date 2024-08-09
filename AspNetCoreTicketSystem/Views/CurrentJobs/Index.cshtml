@@ -3,6 +3,8 @@
 @{
     ViewData["Title"] = "Current Jobs";
     var isHelpdesk = User.IsInRole(Constants.HelpdeskRole);
+    string sortOrder = ViewData["SortOrder"]?.ToString() ?? "asc";
+    string sortBy = ViewData["SortBy"]?.ToString() ?? "Name";
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -10,12 +12,40 @@
 <table class="table">
     <thead>
         <tr>
-            <th>Name</th>
-            <th>Status</th>
-            <th>Description</th>
-            <th>Created At</th>
-            <th>Days Since Creation</th>
-            <th>Time to Complete</th>
+            <th>
+                <a asp-action="Index" asp-route-sortBy="Name" asp-route-sortOrder="@(sortBy == "Name" && sortOrder == "asc" ? "desc" : "asc")">Name</a>
+                @if (sortBy == "Name")
+                {
+                        <span>@(sortOrder == "asc" ? "▲" : "▼")</span>
+                }
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortBy="Status" asp-route-sortOrder="@(sortBy == "Status" && sortOrder == "asc" ? "desc" : "asc")">Status</a>
+                @if (sortBy == "Status")
+                {
+                        <span>@(sortOrder == "asc" ? "▲" : "▼")</span>
+                }
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortBy="Description" asp-route-sortOrder="@(sortBy == "Description" && sortOrder == "asc" ? "desc" : "asc")">Description</a>
+                @if (sortBy == "Description")
+                {
+                        <span>@(sortOrder == "asc" ? "▲" : "▼")</span>
+                }
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortBy="CreatedAt" asp-route-sortOrder="@(sortBy == "CreatedAt" && sortOrder == "asc" ? "desc" : "asc")">Created At</a>
+                @if (sortBy == "CreatedAt")
+                {
+                        <span>@(sortOrder == "asc" ? "▲" : "▼")</span>
+                }
+            </th>
+            <th>
+                Days Since Creation
+            </th>
+            <th>
+                Time to Complete
+            </th>
             @if (isHelpdesk)
             {
                     <th>Actions</th>
