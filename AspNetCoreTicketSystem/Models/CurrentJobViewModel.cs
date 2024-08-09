@@ -4,6 +4,7 @@ namespace AspNetCoreTicketSystem.Models
 {
     public class CurrentJobViewModel
     {
+        public int Id { get; set; }  // Add this line
         public string Name { get; set; }
         public string Status { get; set; }
         public string Description { get; set; }

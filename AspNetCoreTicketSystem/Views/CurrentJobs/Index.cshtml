@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Current Jobs";
+    var isHelpdesk = User.IsInRole(Constants.HelpdeskRole);
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -15,13 +16,17 @@
             <th>Created At</th>
             <th>Days Since Creation</th>
             <th>Time to Complete</th>
+            @if (isHelpdesk)
+            {
+                    <th>Actions</th>
+            }
         </tr>
     </thead>
     <tbody>
         @if (!Model.Any())
         {
                 <tr>
-                    <td colspan="6">No current jobs available.</td>
+                    <td colspan="7">No current jobs available.</td>
                 </tr>
         }
         else
@@ -35,6 +40,12 @@
                             <td>@job.CreatedAt.ToString("g")</td>
                             <td>@job.DaysSinceCreation</td>
                             <td>@job.TimeToComplete</td>
+                    @if (isHelpdesk)
+                    {
+                                    <td>
+                                        <a class="btn btn-warning" asp-action="Edit" asp-route-id="@job.Id">Edit Status</a>
+                                    </td>
+                    }
                         </tr>
             }
         }
