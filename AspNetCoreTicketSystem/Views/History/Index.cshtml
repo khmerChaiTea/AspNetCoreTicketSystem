@@ -1,6 +1,10 @@
 ﻿@model IEnumerable<AspNetCoreTicketSystem.Models.TicketSystem>
 
-<h2>Ticket History</h2>
+@{
+    ViewData["Title"] = "Ticket History";
+}
+
+<h1>@ViewData["Title"]</h1>
 
 <table class="table">
     <thead>
@@ -9,7 +13,6 @@
             <th>Status</th>
             <th>Created At</th>
             <th>Updated At</th>
-            <th>Deleted</th>
         </tr>
     </thead>
     <tbody>
@@ -18,9 +21,8 @@
                 <tr>
                     <td>@ticket.Title</td>
                     <td>@ticket.Status</td>
-                    <td>@ticket.CreatedAt.ToString("g")</td>
-                    <td>@ticket.UpdatedAt.ToString("g")</td>
-                    <td>@(ticket.IsDeleted ? "Yes" : "No")</td>
+                    <td>@ticket.CreatedAt.ToString("g")</td> <!-- Ensure CreatedAt is a DateTime -->
+                    <td>@ticket.UpdatedAt.ToString("g")</td> <!-- Ensure UpdatedAt is a DateTime -->
                 </tr>
         }
     </tbody>

@@ -1,0 +1,42 @@
+﻿@model IEnumerable<AspNetCoreTicketSystem.Models.CurrentJobViewModel>
+
+@{
+    ViewData["Title"] = "Current Jobs";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Description</th>
+            <th>Created At</th>
+            <th>Days Since Creation</th>
+            <th>Time to Complete</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any())
+        {
+                <tr>
+                    <td colspan="6">No current jobs available.</td>
+                </tr>
+        }
+        else
+        {
+            @foreach (var job in Model)
+            {
+                        <tr>
+                            <td>@job.Name</td>
+                            <td>@job.Status</td>
+                            <td>@job.Description</td>
+                            <td>@job.CreatedAt.ToString("g")</td>
+                            <td>@job.DaysSinceCreation</td>
+                            <td>@job.TimeToComplete</td>
+                        </tr>
+            }
+        }
+    </tbody>
+</table>
