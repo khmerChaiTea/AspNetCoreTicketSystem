@@ -43,25 +43,32 @@
                     <td>@user.Id</td>
                     <td>@user.Email</td>
                     <td>
-                        <form asp-action="AssignRole" method="post" class="form-inline">
-                            <input type="hidden" name="userId" value="@user.Id" />
-                            <select name="roleName" class="form-control">
-                            @foreach (var role in Model.Roles)
-                            {
-                                var isAssigned = Model.UserRoles.ContainsKey(user.Id) && Model.UserRoles[user.Id].Contains(role.Name);
+                    @if (user.Email != "admin@ticket.local")
+                    {
+                                <form asp-action="AssignRole" method="post" class="form-inline">
+                                    <input type="hidden" name="userId" value="@user.Id" />
+                                    <select name="roleName" class="form-control">
+                                @foreach (var role in Model.Roles)
+                                {
+                                    var isAssigned = Model.UserRoles.ContainsKey(user.Id) && Model.UserRoles[user.Id].Contains(role.Name);
 
-                                if (!isAssigned)
-                                {
-                                                <option value="@role.Name">@role.Name</option>
+                                    if (!isAssigned)
+                                    {
+                                                        <option value="@role.Name">@role.Name</option>
+                                    }
+                                    else
+                                    {
+                                                        <option value="@role.Name" disabled>@role.Name (Assigned)</option>
+                                    }
                                 }
-                                else
-                                {
-                                                <option value="@role.Name" disabled>@role.Name (Assigned)</option>
-                                }
-                            }
-                            </select>
-                            <input type="submit" value="Assign" class="btn btn-primary" />
-                        </form>
+                                    </select>
+                                    <input type="submit" value="Assign" class="btn btn-primary" />
+                                </form>
+                    }
+                    else
+                    {
+                                <span class="text-muted">Role management disabled</span>
+                    }
                     </td>
                 </tr>
         }
