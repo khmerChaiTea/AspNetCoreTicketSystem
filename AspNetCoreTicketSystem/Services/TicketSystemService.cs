@@ -9,14 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AspNetCoreTicketSystem.Services
 {
-    public class TicketSystemService : ITicketSystemService
+    public class TicketSystemService(ApplicationDbContext context) : ITicketSystemService
     {
-        private readonly ApplicationDbContext _context;
-
-        public TicketSystemService(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context ?? throw new ArgumentNullException(nameof(context));
 
         public async Task<TicketSystem[]> GetActiveTicketsAsync(IdentityUser user)
         {
@@ -32,14 +27,15 @@ namespace AspNetCoreTicketSystem.Services
                                  .ToArrayAsync();
         }
 
-        public async Task<TicketSystem> GetTicketByIdAsync(int id)
+        public async Task<TicketSystem?> GetTicketByIdAsync(int id)
         {
-            var ticket = await _context.Tickets
-                                       .FirstOrDefaultAsync(t => t.Id == id && !t.IsDeleted);
+            // Retrieve the ticket from the database
+            var ticket = await _context.Tickets.FindAsync(id);
 
+            // If the ticket is not found, return null
             if (ticket == null)
             {
-                throw new InvalidOperationException("Ticket not found");
+                return null;
             }
 
             return ticket;
@@ -47,8 +43,17 @@ namespace AspNetCoreTicketSystem.Services
 
         public async Task CreateTicketAsync(TicketSystem ticket)
         {
+            // Validate the ticket
+            ArgumentNullException.ThrowIfNull(ticket);
+
+            if (string.IsNullOrEmpty(ticket.Title))
+                throw new ArgumentException("Title is required");
+
+            // Set default values
             ticket.CreatedAt = DateTime.UtcNow;
             ticket.UpdatedAt = DateTime.UtcNow;
+
+            // Add to context and save
             _context.Tickets.Add(ticket);
             await _context.SaveChangesAsync();
         }

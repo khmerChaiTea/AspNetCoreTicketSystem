@@ -10,7 +10,7 @@ namespace AspNetCoreTicketSystem
     {
         Task<TicketSystem[]> GetActiveTicketsAsync(IdentityUser user); // Add this line
         Task<TicketSystem[]> GetAllTicketsAsync(); // Ensure this line is present
-        Task<TicketSystem> GetTicketByIdAsync(int id);
+        Task<TicketSystem?> GetTicketByIdAsync(int id);
         Task CreateTicketAsync(TicketSystem ticket);
         Task UpdateTicketAsync(TicketSystem ticket);
         Task DeleteTicketAsync(int id);

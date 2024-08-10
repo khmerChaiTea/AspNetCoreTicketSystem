@@ -10,16 +10,10 @@ using AspNetCoreTicketSystem.Models;
 namespace AspNetCoreTicketSystem.Controllers
 {
     [Authorize(Roles = "Administrator")]
-    public class ManageUsersController : Controller
+    public class ManageUsersController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager) : Controller
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
-
-        public ManageUsersController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
-        {
-            _userManager = userManager;
-            _roleManager = roleManager;
-        }
+        private readonly UserManager<IdentityUser> _userManager = userManager;
+        private readonly RoleManager<IdentityRole> _roleManager = roleManager;
 
         public async Task<IActionResult> Index()
         {

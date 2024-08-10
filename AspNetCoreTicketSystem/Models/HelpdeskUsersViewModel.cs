@@ -8,7 +8,7 @@ namespace AspNetCoreTicketSystem.Models
     {
         public HelpdeskUsersViewModel()
         {
-            HelpdeskUsers = Array.Empty<IdentityUser>();
+            HelpdeskUsers = [];
         }
 
         public IEnumerable<IdentityUser> HelpdeskUsers { get; set; }

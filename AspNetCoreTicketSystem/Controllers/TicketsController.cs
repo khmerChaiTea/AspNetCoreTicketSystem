@@ -2,6 +2,7 @@
 using AspNetCoreTicketSystem.Data;
 using AspNetCoreTicketSystem.Models;
 using AspNetCoreTicketSystem.Services;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -11,16 +12,10 @@ using Microsoft.AspNetCore.Identity;
 namespace AspNetCoreTicketSystem.Controllers
 {
     [Authorize]
-    public class TicketsController : Controller
+    public class TicketsController(ITicketSystemService ticketService, UserManager<IdentityUser> userManager) : Controller
     {
-        private readonly ITicketSystemService _ticketService;
-        private readonly UserManager<IdentityUser> _userManager;
-
-        public TicketsController(ITicketSystemService ticketService, UserManager<IdentityUser> userManager)
-        {
-            _ticketService = ticketService;
-            _userManager = userManager;
-        }
+        private readonly ITicketSystemService _ticketService = ticketService;
+        private readonly UserManager<IdentityUser> _userManager = userManager;
 
         // GET: Tickets
         public async Task<IActionResult> Index()
@@ -112,29 +107,26 @@ namespace AspNetCoreTicketSystem.Controllers
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null) return Challenge();
 
-            // Check if the user is in the HelpdeskRole
+            var existingTicket = await _ticketService.GetTicketByIdAsync(id);
+            if (existingTicket == null)
+            {
+                return NotFound();
+            }
+
             var isHelpdesk = User.IsInRole(Constants.HelpdeskRole);
 
             if (!isHelpdesk)
             {
-                // Prevent unauthorized status changes
-                ticket.Status = (await _ticketService.GetTicketByIdAsync(id)).Status;
+                ticket.Status = existingTicket.Status; // Preserve original status for non-helpdesk users
             }
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var existingTicket = await _ticketService.GetTicketByIdAsync(id);
-                    if (existingTicket == null)
-                    {
-                        return NotFound();
-                    }
-
-                    // Update only Title and Description, and Status if authorized
                     existingTicket.Title = ticket.Title;
                     existingTicket.Description = ticket.Description;
-                    if (isHelpdesk) existingTicket.Status = ticket.Status;
+                    if (isHelpdesk) existingTicket.Status = ticket.Status; // Allow status update only for helpdesk users
                     existingTicket.UpdatedAt = DateTime.UtcNow;
                     existingTicket.UserId = currentUser.Id;
 
