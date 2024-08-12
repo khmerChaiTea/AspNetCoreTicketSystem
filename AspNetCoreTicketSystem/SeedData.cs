@@ -62,6 +62,7 @@ namespace AspNetCoreTicketSystem
             {
                 // Log errors or handle the case where user creation fails
                 // You can use a logger to log the result.Errors
+                // The code initializes seed data for the `AspNetCoreTicketSystem` application by ensuring essential roles and a default administrator account are set up at startup. The `InitializeAsync` method retrieves the `RoleManager` and `UserManager` services to create predefined roles (`Administrator`, `Helpdesk`, and `Customer`) if they don't already exist and to create a test admin user (`admin@ticket.local`) with a default password. This automated seeding process ensures that role-based access control (RBAC) is enforced and administrators can log in immediately after deployment, simplifying the initial setup and configuration of the application.
             }
         }
     }
