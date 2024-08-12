@@ -75,4 +75,9 @@ static void InitializeDatabase(WebApplication app)
 
 public partial class Program { }
 
-//This code configures an ASP.NET Core application, setting up essential services like Entity Framework Core, Identity, and custom services. It initializes the database with seed data during startup, configures the HTTP request pipeline for both development and production environments, and sets up routing and middleware necessary for the application to run
+// This code configures an ASP.NET Core application,
+// setting up essential services like Entity Framework Core,
+// Identity, and custom services. It initializes the database
+// with seed data during startup, configures the HTTP request
+// pipeline for both development and production environments,
+// and sets up routing and middleware necessary for the application to run

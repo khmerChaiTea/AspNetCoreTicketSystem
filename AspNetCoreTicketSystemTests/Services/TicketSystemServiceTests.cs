@@ -296,4 +296,11 @@ namespace AspNetCoreTicketSystem.Services.Tests
 }
 
 
-// The `TicketSystemServiceTests` class is a comprehensive suite of unit and integration tests designed to validate the functionality of the `TicketSystemService` in a .NET application. Using MSTest, Entity Framework Core for in-memory databases, and Moq for mocking dependencies, these tests ensure the robustness and reliability of ticket management operations. The suite covers scenarios such as ticket creation, updating, and deletion, along with error handling for invalid data and non-existent tickets. Integration tests further verify end-to-end functionality, including concurrency handling. Overall, this test suite ensures that the `TicketSystemService` behaves correctly under various conditions, maintaining the integrity and reliability of the application.
+// The `TicketSystemServiceTests` class is a comprehensive suite of unit and integration tests designed
+// to validate the functionality of the `TicketSystemService` in a .NET application. Using MSTest,
+// Entity Framework Core for in-memory databases, and Moq for mocking dependencies, these tests
+// ensure the robustness and reliability of ticket management operations. The suite covers scenarios
+// such as ticket creation, updating, and deletion, along with error handling for invalid data and non-existent tickets.
+// Integration tests further verify end-to-end functionality, including concurrency handling. Overall,
+// this test suite ensures that the `TicketSystemService` behaves correctly under various conditions,
+// maintaining the integrity and reliability of the application.
